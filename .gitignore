@@ -1,0 +1,7 @@
+.vscode
+.DS_Store
+.terraform
+*.zip
+terraform.auto.tfvars
+backend.auto.tfvars
+.env
