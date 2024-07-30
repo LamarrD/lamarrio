@@ -20,21 +20,33 @@ export async function generateStaticParams() {
   }));
 }
 
-const fetchBlogPost = async (slug) => {
+export async function fetchBlogPost(slug) {
   const queryOptions = {
     content_type: "blog",
     "fields.slug[match]": slug,
   };
   const queryResult = await client.getEntries(queryOptions);
   return queryResult.items[0];
-};
+}
+
+export async function getImageCaptions(content) {
+  // Image descriptions have to be fetched separately, parse the content to get the image links
+  const imageLinks = content.match(/\/\/images\.ctfassets\.net\/[^\s]+/g);
+  const imageCaptions = {};
+  for (let i = 0; i < imageLinks.length; i++) {
+    const asset = await client.getAsset(imageLinks[i].split("/")[4]);
+    imageCaptions[imageLinks[i]] = asset.fields.description;
+  }
+  return imageCaptions;
+}
 
 export default async function BlogPage(props) {
   const { params } = props;
   const { slug } = params;
   const article = await fetchBlogPost(slug);
   const timeToRead = Math.floor(article.fields.content.length / 600) || 1;
-  const { title, author, date, content } = article.fields;
+  let { title, author, date, content } = article.fields;
+  const captions = await getImageCaptions(content);
 
   return (
     <main className="px-4 lg:px-56 md:px-24 flex justify-center max-w-full">
@@ -85,9 +97,11 @@ export default async function BlogPage(props) {
               },
               img(props) {
                 const { alt, src } = props;
+                const caption = captions[src];
                 return (
-                  <span className="flex justify-center items-center m-auto">
+                  <span className="flex flex-col justify-center items-center m-auto">
                     <img className="max-w-xl h-auto " src={src} alt={alt} />
+                    <span className="text-sm">{caption}</span>
                   </span>
                 );
               },
@@ -105,8 +119,9 @@ export default async function BlogPage(props) {
                 );
               },
               p(props) {
+                const className = props.children.length === 1 ? "mb-2" : "mb-0";
                 return (
-                  <p id="md" className="mb-0">
+                  <p id="md" className={className}>
                     {props.children}
                   </p>
                 );

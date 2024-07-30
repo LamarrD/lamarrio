@@ -54,5 +54,7 @@ ol {
   list-style-position: inside;
 }
 
-
+#md.mb-2 {
+  margin-bottom: 0.5rem;
+}
 
