@@ -4,6 +4,9 @@ name: Deploy
 on:
   push:
     branches: [ main ]
+  repository_dispatch:
+    types:
+      - cms-update
 permissions:
   id-token: write
   contents: read 
