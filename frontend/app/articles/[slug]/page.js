@@ -100,7 +100,11 @@ export default async function BlogPage(props) {
                 const caption = captions[src];
                 return (
                   <span className="flex flex-col justify-center items-center m-auto">
-                    <img className="max-w-full h-auto " src={src} alt={alt} />
+                    <img
+                      className="max-w-full h-auto max-h-screen sm:w-1/2 md:w-8/12 md:max-h-96 lg:w-10/12 lg:max-h-128 xl:w-10/12 xl:max-h-160"
+                      src={src}
+                      alt={alt}
+                    />
                     <span className="text-sm">{caption}</span>
                   </span>
                 );
