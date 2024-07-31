@@ -20,7 +20,7 @@ export async function generateStaticParams() {
   }));
 }
 
-export async function fetchBlogPost(slug) {
+async function fetchBlogPost(slug) {
   const queryOptions = {
     content_type: "blog",
     "fields.slug[match]": slug,
@@ -29,11 +29,11 @@ export async function fetchBlogPost(slug) {
   return queryResult.items[0];
 }
 
-export async function getImageCaptions(content) {
+async function getImageCaptions(content) {
   // Image descriptions have to be fetched separately, parse the content to get the image links
   const imageLinks = content.match(/\/\/images\.ctfassets\.net\/[^\s]+/g);
   const imageCaptions = {};
-  for (let i = 0; i < imageLinks.length; i++) {
+  for (let i = 0; i < imageLinks?.length || 0; i++) {
     const asset = await client.getAsset(imageLinks[i].split("/")[4]);
     imageCaptions[imageLinks[i]] = asset.fields.description;
   }
