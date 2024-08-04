@@ -98,12 +98,20 @@ export default async function BlogPage(props) {
               img(props) {
                 const { alt, src } = props;
                 const caption = captions[src];
-                return (
-                  <span className="flex flex-col justify-center items-center m-auto">
-                    <img className="max-w-full h-auto" src={src} alt={alt} />
-                    <span className="text-sm">{caption}</span>
-                  </span>
-                );
+                if (src.includes("video")) {
+                  return (
+                    <video className="max-w-full h-auto" controls>
+                      <source src={src} />
+                    </video>
+                  );
+                } else {
+                  return (
+                    <span className="flex flex-col justify-center items-center m-auto">
+                      <img className="max-w-full h-auto" src={src} alt={alt} />
+                      <span className="text-sm">{caption}</span>
+                    </span>
+                  );
+                }
               },
               ul(props) {
                 return <ul className="mb-8 -mt-8">{props.children}</ul>;
