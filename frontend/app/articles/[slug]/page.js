@@ -31,7 +31,7 @@ async function fetchBlogPost(slug) {
 
 async function getImageCaptions(content) {
   // Image descriptions have to be fetched separately, parse the content to get the image links
-  const imageLinks = content.match(/\/\/images\.ctfassets\.net\/[^\s]+/g);
+  const imageLinks = content.match(/\/\/images\.ctfassets\.net\/[^\s)]+/g);
   const imageCaptions = {};
   for (let i = 0; i < imageLinks?.length || 0; i++) {
     const asset = await client.getAsset(imageLinks[i].split("/")[4]);
@@ -108,7 +108,7 @@ export default async function BlogPage(props) {
                   return (
                     <span className="flex flex-col justify-center items-center m-auto">
                       <img className="max-w-full h-auto" src={src} alt={alt} />
-                      <span className="text-sm">{caption}</span>
+                      <span className="text-sm text-gray-500">{caption}</span>
                     </span>
                   );
                 }
