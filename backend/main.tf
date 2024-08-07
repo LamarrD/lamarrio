@@ -194,7 +194,7 @@ resource "aws_iam_role" "github_actions_role_lamarrio" {
         Condition = {
           StringEquals = {
             "token.actions.githubusercontent.com:aud" = "sts.amazonaws.com"
-            "token.actions.githubusercontent.com:sub" = "repo:lamarrd/lamarrio:ref:refs/heads/main"
+            "token.actions.githubusercontent.com:sub" = "repo:LamarrD/lamarrio:ref:refs/heads/main"
           }
         }
       }
