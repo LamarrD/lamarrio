@@ -1,5 +1,7 @@
 import { createClient } from "contentful";
 import Markdown from "react-markdown";
+import remarkGfm from "remark-gfm";
+
 import { Prism as SyntaxHighlighter } from "react-syntax-highlighter";
 import { darcula } from "react-syntax-highlighter/dist/esm/styles/prism";
 import CopyToClipboard from "./CopyToClipboard";
@@ -18,6 +20,15 @@ export async function generateStaticParams() {
   return articles.items.map((article) => ({
     slug: article.fields.slug,
   }));
+}
+
+export async function generateMetadata(props) {
+  console.log("props", props);
+  const article = await fetchBlogPost(props.params.slug);
+  return {
+    title: article.fields.title,
+    description: article.fields.description,
+  };
 }
 
 async function fetchBlogPost(slug) {
@@ -70,6 +81,7 @@ export default async function BlogPage(props) {
         <hr className="my-8" />
         <div className="[&>p]:mb-8 [&>h2]:font-extrabold">
           <Markdown
+            remarkPlugins={[remarkGfm]}
             children={content}
             components={{
               code(props) {
@@ -90,7 +102,7 @@ export default async function BlogPage(props) {
                     <CopyToClipboard text={String(children).replace(/\n$/, "")} />
                   </div>
                 ) : (
-                  <code {...rest} className={className + "-mt-4 mb-8"}>
+                  <code {...rest} className={className + "-mt-4 mb-8 bg-gray-800"}>
                     {children}
                   </code>
                 );
@@ -100,10 +112,12 @@ export default async function BlogPage(props) {
                 const caption = captions[src];
                 if (src.includes("video")) {
                   return (
-                    <video className="max-w-full h-auto" controls>
+                    <video className="max-w-full h-auto" controls autoPlay muted loop>
                       <source src={src} />
                     </video>
                   );
+                } else if (src.includes("//assets")) {
+                  return <a href={src}></a>;
                 } else {
                   return (
                     <span className="flex flex-col justify-center items-center m-auto">
