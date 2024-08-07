@@ -3,6 +3,11 @@
 import Link from "next/link";
 import { createClient } from "contentful";
 
+export const metadata = {
+  title: "Blog",
+  description: "A collection of blog posts",
+};
+
 const client = createClient({
   space: process.env.SPACE_ID,
   accessToken: process.env.ACCESS_TOKEN,

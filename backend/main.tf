@@ -75,6 +75,7 @@ resource "aws_cloudfront_distribution" "distribution" {
     min_ttl                = 0
     default_ttl            = 3600
     max_ttl                = 86400
+    compress               = true
 
     lambda_function_association {
       event_type    = "origin-request"
@@ -104,10 +105,10 @@ resource "aws_cloudfront_distribution" "distribution" {
     }
   }
 
-  aliases = ["lamarr.io"]
+  aliases = ["lamarr.io", "www.lamarr.io"]
 
   viewer_certificate {
-    acm_certificate_arn      = "arn:aws:acm:us-east-1:${var.account_id}:certificate/1569a5e0-e9c4-4c50-b37b-80bc14ea9204"
+    acm_certificate_arn      = "arn:aws:acm:us-east-1:${var.account_id}:certificate/c2fa7a88-80cb-4f66-9786-435deee7037a"
     ssl_support_method       = "sni-only"
     minimum_protocol_version = "TLSv1.2_2019"
   }
@@ -158,6 +159,18 @@ resource "aws_lambda_function" "rewriter-lambda" {
 resource "aws_route53_record" "www" {
   zone_id = "Z10011762I7QSZINCCVWT"
   name    = "lamarr.io"
+  type    = "A"
+
+  alias {
+    name                   = aws_cloudfront_distribution.distribution.domain_name
+    zone_id                = aws_cloudfront_distribution.distribution.hosted_zone_id
+    evaluate_target_health = false
+  }
+}
+
+resource "aws_route53_record" "www2" {
+  zone_id = "Z10011762I7QSZINCCVWT"
+  name    = "www.lamarr.io"
   type    = "A"
 
   alias {

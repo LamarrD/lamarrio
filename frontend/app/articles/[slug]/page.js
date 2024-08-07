@@ -28,6 +28,13 @@ export async function generateMetadata(props) {
   return {
     title: article.fields.title,
     description: article.fields.description,
+    openGraph: {
+      title: article.fields.title,
+      description: article.fields.description,
+      type: "article",
+      url: `https://lamarr.io/articles/${article.fields.slug}`,
+      site_name: "Lamarr's Blog",
+    },
   };
 }
 
